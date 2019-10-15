@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   echo = TRUE,
   fig.path = "img/",
   collapse=TRUE,
-  eval = F
+  eval = T
 )
 ```
 
@@ -27,36 +27,57 @@ library(vegan)
 ## Datos
 
 ```{r}
-cm <- read.csv('data/d.mc.csv', row.names = 1, check.names = F)
-env <- read.csv('data/d.env.csv', row.names = 1, check.names = F)
+cm <- read.csv('data/mc.csv', row.names = 1, check.names = F)
+env <- read.csv('data/amb.csv', row.names = 1, check.names = F)
 ```
 
 
 ## Índices de diversidad
 
 ```{r}
-
+H <-  diversity(cm)
+H
+sort(specnumber(cm))
+rowSums(cm)
+sort(specnumber(cm))
+sort(rowSums(cm))
+sort(colSums(cm))
+J <- H/log(specnumber(cm))
+cm["CROB_01",] %>%  gather(especie,individuos) %>% filter(individuos>0) %>% arrange(individuos) %>% View()
+cm["PVRO_04",] %>%  gather(especie,individuos) %>% filter(individuos>0) %>% arrange(individuos) %>% View()
+R <-renyi(cm)
+plot(R)
+sort(H)
+#riqueza total
+specnumber(colSums(cm))
+#abundancia total
+sum(rowSums(cm))
+alpha <- fisher.alpha(cm)
+alpha
 ```
-
 
 ## Gráficos de los índices de diversidad
 
 ```{r}
-
+plot(R)
+boxplot(H)
+summary(H)
 ```
-
 
 ## Rarificación
 
 
-## Modelos de abundancia de especie
+
+## Modelos de # de especie
 
 ```{r}
-
+summary(rowSums(cm))
+rarefy(cm,min(rowSums(cm)))
+rarecurve(cm)
 ```
 
 
-## Modelos de acumulación de especies y diversidad *beta*
+## Modelos de acumulación de especies y diversidad 
 
 ### Modelos de acumulación de especies
 
